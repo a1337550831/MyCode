@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+            http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+            http://www.springframework.org/schema/context
+            http://www.springframework.org/schema/context/spring-context-3.1.xsd">
+    <context:annotation-config/>
+    <context:component-scan base-package="quartzJob"/>
+
+    <!--定义工作细节-->
+    <bean id="detailJob" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="quartzJob"/>
+        <property name="targetMethod" value="sayHello"/>
+        <property name="concurrent" value="false"/>
+    </bean>
+    <!--定义触发器-->
+    <bean id="cronTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail" ref="detailJob"/>
+        <property name="cronExpression" value="*/4 * * * * ?"/>
+    </bean>
+    <!--定义调度器-->
+    <bean id="scheduler" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+        <property name="triggers">
+            <list>
+                <ref bean="cronTrigger"/>
+            </list>
+        </property>
+
+        <property name="startupDelay" value="5"/>
+        <property name="autoStartup" value="true"/>
+    </bean>
+
+
+
+
+
+
+
+
+</beans>
